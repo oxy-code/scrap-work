@@ -1,0 +1,40 @@
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+	<canvas id="myCanvas" width="600" height="300" style="border:1px solid #000000;"></canvas>
+	<script type="text/javascript">
+		var canvas = document.getElementById("myCanvas");
+		var ctx = canvas.getContext("2d");
+		var centerPoint = getCenterPointOfCanvas();
+		//ctx.fillStyle = "#FF0000"; // color
+		ctx.moveTo(centerPoint.x,centerPoint.y);
+		ctx.lineTo(centerPoint.x + 100, centerPoint.y);
+		ctx.stroke();
+
+
+		function getCenterPointOfCanvas(){
+			var x1 = 0, y1 = 0, x2 = canvas.width, y2 = canvas.height;
+			console.log((x2-x1)/2,(y2-y1)/2)
+			return {x:(x2-x1)/2,y:(y2-y1)/2};
+		}
+
+		var moving = {x : centerPoint.x + 100, y: centerPoint.y};
+		setInterval(function(){
+			ctx.moveTo(centerPoint.x,centerPoint.y);
+			ctx.lineTo(moving.x, moving.y);
+			ctx.stroke();
+			moving.y += 100;
+		},1000)
+
+		/*var angle = 0, hyp = 1, opp, adj;
+		while(angle <= 360){
+		opp = Math.sin(angle);
+		adj = Math.cos(angle);
+		angle++;
+		console.log('opp',opp,'adj',adj,'angle',angle);
+		}*/
+	</script>
+</body>
+</html>
