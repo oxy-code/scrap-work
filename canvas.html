@@ -3,12 +3,12 @@
 	<title></title>
 </head>
 <body>
-	<canvas id="myCanvas" width="600" height="300" style="border:1px solid #000000;"></canvas>
+	<canvas id="myCanvas" width="700" height="600" style="border:1px solid #000000;"></canvas>
 	<script type="text/javascript">
 		var canvas = document.getElementById("myCanvas");
 		var ctx = canvas.getContext("2d");
 		var centerPoint = getCenterPointOfCanvas();
-		//ctx.fillStyle = "#FF0000"; // color
+		ctx.strokeStyle = "#FF0000"; // color
 		ctx.moveTo(centerPoint.x,centerPoint.y);
 		ctx.lineTo(centerPoint.x + 100, centerPoint.y);
 		ctx.stroke();
@@ -22,11 +22,17 @@
 
 		var moving = {x : centerPoint.x + 100, y: centerPoint.y};
 		setInterval(function(){
+			ctx.clearRect(0,0,canvas.width,canvas.height);
 			ctx.moveTo(centerPoint.x,centerPoint.y);
 			ctx.lineTo(moving.x, moving.y);
 			ctx.stroke();
-			moving.y += 100;
-		},1000)
+			if (moving.y >= moving.x){
+				moving.x += 100;
+			}
+			else {
+				moving.y += 100;
+			}
+		},100)
 
 		/*var angle = 0, hyp = 1, opp, adj;
 		while(angle <= 360){
