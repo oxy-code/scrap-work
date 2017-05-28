@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+<style type="text/css">
+	.pagination ul{
+		display: inline;
+		list-style: none;
+	}
+	.pagination ul li{
+		display: inline-block;
+	}
+</style>
+<body>
+<div ng-app="myApp" ng-controller="myCtrl"> 
+	<div ng-if="loading">Loading...</div>
+	<table border="1" ng-if="!loading">
+		<tr>
+			<th ng-click="changeSorting('id')">ID</th>
+			<th ng-click="changeSorting('userId')">USER ID</th>
+			<th ng-click="changeSorting('title')">TITLE</th>
+			<th ng-click="changeSorting('body')">BODY</th>
+		</tr>
+		<tr ng-repeat="realdata in myWelcome">
+			<td>{{realdata.id}}</td>
+			<td>{{realdata.userId}}</td>
+			<td>{{realdata.title}}</td>
+			<td>{{realdata.body}}</td>
+		</tr>
+	</table>
+	<div class="pagination">
+		<span>Showing {{start}}-{{end}} of {{total}}</span>
+		<ul>
+			<li><button ng-click="fetch('prev')" ng-disabled="prev === false"><<</button></li>
+			<li ng-repeat="pageNum in pageNos">
+				<button ng-click="fetch(pageNum+1)" ng-disabled="activePage === pageNum + 1">{{pageNum + 1}}</button>
+			</li>
+			<li><button ng-click="fetch('next')" ng-disabled="next === false">>></button></li>
+		</ul>
+	</div>
+</div>
+<script>
+var app = angular.module('myApp', []);
+app.controller('myCtrl', function($scope, $http) {
+	var apiEndpoint = 'index.php';
+
+	// vars
+	$scope.start = 0;
+	$scope.end = 0;
+	$scope.total = 0;
+	$scope.limit = 20;
+	$scope.pageNo = 1;
+	$scope.activePage = 1;
+	$scope.totalPages = 0;
+	$scope.pageNos = [];
+	$scope.prev = false;
+	$scope.next = false;
+	$scope.sort = {field: 'id',dir: 'asc'};
+	
+	// methods
+	init();
+	$scope.changeSorting = changeSorting;
+	$scope.fetch = fetch;
+
+	function init(){
+		loadResource('limit='+$scope.limit+'&page=1');
+	}
+
+	function changeSorting(column) {
+		if($scope.sort.field === column){
+			$scope.sort.dir = ($scope.sort.dir === 'asc') ? 'desc' : 'asc';
+		}
+		else{
+			$scope.sort.field = column;
+		}
+		var queryString = 'sort='+$scope.sort.field+':'+$scope.sort.dir+'&page=1'+'&limit='+$scope.limit;
+		loadResource(queryString);
+		$scope.activePage = 1;
+	};
+
+	function fetch(k){
+		switch(k){
+			case 'prev':
+				$scope.activePage = $scope.activePage - 1;
+				loadResource($scope.prev);
+			break;
+			case 'next':
+				$scope.activePage = $scope.activePage + 1;
+				console.log($scope.activePage)
+				loadResource($scope.next);
+			break;
+			default:
+				$scope.activePage = k;
+				var queryString = 'sort='+$scope.sort.field+':'+$scope.sort.dir+'&page='+k+'&limit='+$scope.limit;
+				loadResource(queryString);
+			break;
+		}
+	}
+
+	function loadResource(queryString){
+		url = (queryString) ? apiEndpoint + '?'+ queryString : apiEndpoint;
+		$scope.loading = true;
+		$http.get(url)
+	  .then(function(response) {
+	  	$scope.start = response.data.start;
+			$scope.end = response.data.end;
+			$scope.total = response.data.total;
+	    $scope.myWelcome = response.data.data;
+	    $scope.totalPages = Math.round(response.data.total/$scope.limit);
+	    $scope.prev = response.data.prev;
+			$scope.next = response.data.next;
+			$scope.loading = false;
+	  });
+	}
+
+	$scope.$watch('totalPages', function(total){
+		$scope.pageNos = Array.apply(null, {length: total}).map(Number.call, Number);
+	});
+});
+</script>
+</body>
+</html>
