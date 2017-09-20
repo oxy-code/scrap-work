@@ -1,0 +1,47 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+body, html {
+	height: 100%;
+	background-color: #f8f8f8 !important;
+}
+
+#myCanvas {
+	cursor: crosshair;
+    position: fixed;
+    border: 1px solid #999;
+}
+nav.navbar{ margin-bottom: 0px;}
+.navbar-default{
+	background-color: #3F0F50 !important;
+	border-radius: 0px !important;
+	border-color: #FFF !important;
+}
+.navbar-default a {
+	color: #FFFFFF !important;
+}
+.toolbox {
+	border: 1px solid;
+	width: 50px;
+	margin-right: 2px;
+	background-color: #CCC;
+	border-color: #e7e7e7;
+}
+.toolbox li{ margin: 8px; }
+.toolbox li i {
+	padding: 5px;
+	margin: 1px;
+	display:inline-block;
+	width: 30px;
+	text-align: center;
+	border: 1px solid #EEEEEE;
+}
+.toolbox li i:hover{
+	border: 1px solid #d14836;
+	cursor: context-menu;
+}
+.toolbox li i:active, .toolbox li i:focus{
+	background-color: #FFFFFF;
+}
